@@ -8,8 +8,6 @@ Directory.SetCurrentDirectory(Path.GetDirectoryName(Util.CurrentQueryPath));
 var input = File.ReadAllLines("input.txt").ToList();
 
 // Part 1 //Checksum: 5976
-var doubles = new HashSet<char>();
-var triples = new HashSet<char>();
 var d = 0;
 var t = 0;
 
@@ -24,24 +22,57 @@ foreach (var boxId in input)
 			Triples: acc.Where(x => x.Value == 3).Select(p => p.Key)
 		));
 
-	Console.WriteLine($"{boxId} {d} doubles, {t} triples.");
 	if (matches.Doubles.Any())
 	{
 		d++;
-		Console.WriteLine($"2s: {string.Join(" ", matches.Doubles)}");
+		//Console.WriteLine($"2s: {string.Join(" ", matches.Doubles)}");
 	}
 
 	if (matches.Triples.Any())
 	{
 		t++;
-		Console.WriteLine($"3s: {string.Join(" ", matches.Triples)}");
+		//Console.WriteLine($"3s: {string.Join(" ", matches.Triples)}");
 	}
 }
 
+Console.WriteLine("Part 1");
+Console.WriteLine($"{d} doubles, {t} triples.");
 Console.WriteLine($"Checksum: {d * t}");
 
 // Part 2
+StringBuilder sb = new StringBuilder();
+for (var i = 0; i < input.Count - 1; i++)
+{
+	for (var k = i + 1; k < input.Count; k++)
+	{
+		int miss = 0;
+		for (var chr = 0; chr < input[i].Length; chr++)
+		{
+			if (input[i][chr] != input[k][chr])
+			{
+				if (++miss > 1)
+				{
+					sb.Clear();
+					break;
+				}
+				sb.Append("-");
+			}
+			else
+			{
+				sb.Append(input[i][chr]);
+			}
 
+			if (chr == input[i].Length - 1)
+			{
+				Console.WriteLine();
+				Console.WriteLine("Part 2");
+				Console.WriteLine($"{i}: {input[i]}");
+				Console.WriteLine($"{k}: {input[k]}");
+				Console.WriteLine($"Solution: {sb.ToString()}");
+			}
+		}
+	}
+}
 
 // Utilities
 public static class SyntaxHelperExtensions
