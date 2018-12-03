@@ -40,6 +40,7 @@ Console.WriteLine($"{d} doubles, {t} triples.");
 Console.WriteLine($"Checksum: {d * t}");
 
 // Part 2
+var compares = 0;
 StringBuilder sb = new StringBuilder();
 for (var i = 0; i < input.Count - 1; i++)
 {
@@ -48,6 +49,7 @@ for (var i = 0; i < input.Count - 1; i++)
 		int miss = 0;
 		for (var chr = 0; chr < input[i].Length; chr++)
 		{
+			compares++;
 			if (input[i][chr] != input[k][chr])
 			{
 				if (++miss > 1)
@@ -65,7 +67,7 @@ for (var i = 0; i < input.Count - 1; i++)
 			if (chr == input[i].Length - 1)
 			{
 				Console.WriteLine();
-				Console.WriteLine("Part 2");
+				Console.WriteLine($"Part 2 ({compares.ToString("N0")} comparisons)");
 				Console.WriteLine($"{i}: {input[i]}");
 				Console.WriteLine($"{k}: {input[k]}");
 				Console.WriteLine($"Solution: {sb.ToString()}");
