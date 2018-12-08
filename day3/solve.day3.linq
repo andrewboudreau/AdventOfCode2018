@@ -5,42 +5,71 @@ void Main()
 	// Advent of Code 2018, DAY 3
 	Directory.SetCurrentDirectory(Path.GetDirectoryName(Util.CurrentQueryPath));
 	var input = File.ReadAllLines("input.txt").Select(f => new Claim(f)).ToList();
-	var grid = new Grid<int>();
-	
-	Console.WriteLine(grid[0,1]);
-	
-	// Part 1 	
-	Console.WriteLine(input.Max(x => x.X2));
-	Console.WriteLine(input.Max(x => x.Y2));
+	//var input = "#1 @ 1,3: 4x4|#2 @ 3,1: 4x4|#3 @ 5,5: 2x2".Split('|').Select(f => new Claim(f)).ToList();
+
+	// Part 1
+	var overlap = new OverlapTracker(input);
+
 	Console.WriteLine("Part 1");
-	
+	Console.WriteLine($"{overlap.UsedMoreThanOnce()} points where used more than once.");
+	Console.WriteLine();
 
 	// Part 2
 	Console.WriteLine("Part 2");
+	Console.WriteLine($"Claim {overlap.ClaimWithoutOverlap()} doesn't overlap any other claims.");
+	Console.WriteLine();
 }
 
-public class Grid<T>
+public class OverlapTracker
 {
-	private readonly int size;
-	private readonly List<T> data;
-
-	public Grid(int size = 1020)
+	private Dictionary<System.Drawing.Point, List<Claim>> UsedPoints { get; } = new Dictionary<System.Drawing.Point, List<Claim>>();
+	
+	private List<Claim> claims;
+	
+	public OverlapTracker(List<Claim> inputs)
 	{
-		this.size = size;
-		this.data = new List<T>(size * size);
-		for (var i = 0; i < size * size; i++)
+		claims = inputs;
+		foreach (var input in inputs)
 		{
-			this.data[i] = 0;
+			this.Add(input);
 		}
 	}
 
-	// 0-based index access to x/y coordinate.
-	public T this[int x, int y]
+	/// <summary>
+	/// Adds the point to a tracker which returns true if the point as already been added, false otherwise.
+	/// </summary>
+	public void Add(Claim claim)
 	{
-		get
+		foreach (var point in claim.Points())
 		{
-			return this.data[x + (this.size * y)];
+			if (!UsedPoints.ContainsKey(point))
+			{
+				UsedPoints.Add(point, new List<Claim>() { claim });
+			}
+			else
+			{
+				UsedPoints[point].Add(claim);
+			}
 		}
+	}
+
+	public int UsedMoreThanOnce()
+	{
+		return UsedPoints.Values.Count(v => v.Count > 1);
+	}
+
+	public int ClaimWithoutOverlap()
+	{
+		var set = new HashSet<int>(claims.Select(c => c.Id));
+		foreach (var point in UsedPoints)
+		{
+			if (point.Value.Count >= 2)
+			{
+				point.Value.ForEach(x => set.Remove(x.Id));
+			}
+		}
+		
+		return set.Single();
 	}
 }
 
@@ -51,10 +80,11 @@ public class Claim
 		//"#1 @ 850,301: 23x12"
 		var parts = row.Split(' ');
 		Id = int.Parse(parts[0].Trim('#'));
-		Top = int.Parse(parts[2].Split(',')[0]);
-		Left = int.Parse(parts[2].Split(',')[1].Trim(':'));
+		Left = int.Parse(parts[2].Split(',')[0]);
+		Top = int.Parse(parts[2].Split(',')[1].Trim(':'));
 		Width = int.Parse(parts[3].Split('x')[0]);
 		Height = int.Parse(parts[3].Split('x')[1]);
+		//Console.WriteLine($"X1:{X1}, X2:{X2}, Y1:{Y1}, Y2:{Y2}");
 	}
 
 	public int Id { get; }
@@ -62,24 +92,19 @@ public class Claim
 	public int Left { get; }
 	public int Width { get; }
 	public int Height { get; }
-	public int X1 => Left;
-	public int Y1 => Top;
-	public int X2 => Left + Width;
-	public int Y2 => Top + Height;
+	public int X1 => Left + 1;
+	public int Y1 => Top + 1;
+	public int X2 => X1 + Width - 1;
+	public int Y2 => Y1 + Height - 1;
 
-	public bool Overlaps(Claim other)
+	public IEnumerable<System.Drawing.Point> Points()
 	{
-		return
-			(this.X2 >= other.X1 && other.X2 >= this.X1) &&
-			(this.Y2 >= other.Y1 && other.Y2 >= this.Y1);
-	}
-}
-
-// Utilities
-public static class SyntaxHelperExtensions
-{
-	public static string HelpMe(this string me)
-	{
-		return "Help " + me;
+		for (var x = X1; x <= X2; x++)
+		{
+			for (var y = Y1; y <= Y2; y++)
+			{
+				yield return new System.Drawing.Point(x, y);
+			}
+		}
 	}
 }
