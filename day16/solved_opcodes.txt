@@ -1,0 +1,18 @@
+
+OpCode	Operation
+00		Eqri
+01		Bori
+02		Addi
+03		Bani
+04		Seti
+05		Eqrr
+06		Addr
+07		Gtri
+08		Borr
+09		Gtir
+10		Setr
+11		Eqir
+12		Mulr
+13		Muli
+14		Gtrr
+15		Banr

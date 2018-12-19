@@ -1,0 +1,18 @@
+
+OpCode	Operation
+00		Gtir, Gtrr, Eqri
+01		Addi, Mulr, Muli, Banr, Bani, Bori, Setr, Gtir, Gtri, Gtrr, Eqir, Eqrr
+02		Addr, Addi, Mulr, Muli
+03		Banr, Bani
+04		Banr, Bani, Seti, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr
+05		Bani, Gtir, Gtrr, Eqri, Eqrr
+06		Addr, Muli, Seti
+07		Banr, Bani, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr
+08		Addr, Addi, Mulr, Muli, Banr, Bani, Borr, Bori, Setr, Seti, Gtir, Gtri, Gtrr
+09		Setr, Gtir
+10		Banr, Bani, Setr
+11		Bani, Gtir, Gtrr, Eqir, Eqri, Eqrr
+12		Mulr, Banr, Bani, Seti, Gtir, Gtri, Eqri, Eqrr
+13		Mulr, Muli, Banr, Bani, Setr, Seti, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr
+14		Gtir, Gtrr
+15		Banr
