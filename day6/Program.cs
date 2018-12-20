@@ -15,8 +15,6 @@ namespace solve.day6
 			//var points = ParseInput("example.txt").ToList();
 
 
-			
-
 			for (var y = 0; y <= points.Max(p => p.Y); y++)
 			{
 				for (var x = 0; x <= points.Max(p => p.X); x++)
@@ -74,7 +72,7 @@ namespace solve.day6
 
 						if (x == 0 || y == 0 || x == points.Max(p => p.X) || y == points.Max(p => p.Y))
 						{
-							infinite.Add(area[t]);
+							//infinite.Add(area[t]);
 						}
 						t++;
 					}
